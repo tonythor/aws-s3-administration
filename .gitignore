@@ -254,3 +254,4 @@ $RECYCLE.BIN/
 *.metals/
 *.vscode/
 lambda-runs-postgres-scala-sam/packaged.yaml
+*.log
