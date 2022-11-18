@@ -12,9 +12,9 @@ class S3ApiRulesService:
 
     def __init__(self, bucket: str):
         self.bucket = bucket
-        self.existing_rules = self.__get_from_server__()
+        self.existing_rules = self.__download__()
     
-    def __get_from_server__(self) -> list:
+    def __download__(self) -> list:
         client = boto3.client('s3')
         try:
             client.get_bucket_lifecycle(Bucket=self.bucket).get("Rules")
@@ -31,7 +31,8 @@ class S3ApiRulesService:
             logging.info(f"## Found these existing rules: {rules}")
         return rules
     
-    def rule(self, rule: dict):
+    
+    def upload(self, rule: dict):
         pass
         
 
