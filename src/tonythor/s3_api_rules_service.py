@@ -2,11 +2,10 @@ import boto3
 import logging
 from tonythor import conf
 
-class RulesService:
+class S3ApiRulesService:
     """
-    ## The Rules Service
-    This service gets and sends rules via the s3Api  
-
+    ### The S3 Api Rules Service
+    This service handles getting and setting of rules using the s3 api.
     """
     bucket: str
     existing_rules: list
@@ -31,7 +30,9 @@ class RulesService:
             rules: list = client.get_bucket_lifecycle(Bucket=self.bucket).get('Rules')
             logging.info(f"## Found these existing rules: {rules}")
         return rules
-
+    
+    def rule(self, rule: dict):
+        pass
         
 
 
