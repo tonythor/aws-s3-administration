@@ -1,7 +1,7 @@
 import logging
 
 from tonythor import conf
-from tonythor.rules_service import RulesService
+from tonythor.s3_api_rules_service import S3ApiRulesService
 
 logging.info(f"Using account number: {conf.account_number}")
-rules_service = RulesService(bucket = "tonyfraser-aws-logging")
+service = S3ApiRulesService(bucket = "tonyfraser-aws-logging")
