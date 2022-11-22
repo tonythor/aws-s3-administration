@@ -14,9 +14,13 @@ source .venv/bin/activate # activate your virual env
 ```
 
 ### Usage / Upload an s3 retention rule 
+Notes: 
+1. python -m tonythor.examples.deploy_rule is the example
+1. If your key is a directory, don't forget to include the trailing slash.
 ``` 
 source .venv/bin/activate
 cd ./src/
-# python -m tonythor.examples.deploy_rule  -> if you want to use as a script. 
-python -m main -e 45 -i delete-cloud-trail-over-45 -k cloud-trail/AWSLogs/ -b {bucketname}
+python -m main -e 45 -i delete-cloud-trail-over-45 -k cloud-trail/AWSLogs/ -b {bucket}
+python -m main --expire_days 1000 --rule_id delete-cloud-trail-over-4asdfs5 --key_prefix cloud-trailafasf/AWSLogs/ --bucket {bucket}
+
 ```

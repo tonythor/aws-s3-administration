@@ -1,13 +1,12 @@
 import boto3
 import pprint
 
-from tonythor import conf
 # You should probably set your PYTHONPATH to whatever your airflow triggers conda/venv is.  
 
 # Edit and set your variables first
 rule_id_string='deleteCloudTrailAfter30DaysWTrailingSlash200'
 bucket = 'tonyfraser-aws-logging'
-key_prefix=f'cloud-trail/AWSLogs/{conf.account_number}/CloudTrail/us-east-1/'
+key_prefix=f'cloud-trail/AWSLogs/'
 expire_time_in_days=200
 
 # s3://tonyfraser-aws-logging/cloud-trail/AWSLogs/764573855117/CloudTrail/us-east-1/2022/08/19/
