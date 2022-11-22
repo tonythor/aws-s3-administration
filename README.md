@@ -13,12 +13,10 @@ source .venv/bin/activate # activate your virual env
 .venv/bin/python -m pip install -r ./requirements.txt
 ```
 
-### some useful commands
-
+### usage
 ``` 
+source .venv/bin/activate
 cd ./src/
-python -m tonythor.examples.deploy_rule # go edit it to your liking first. 
-python -m main
-
-
+# python -m tonythor.examples.deploy_rule  -> if you want to use as a script. 
+python -m main -e 45 -i delete-cloud-trail-over-45 -k cloud-trail/AWSLogs/ -b tonyfraser-aws-logging
 ```

@@ -22,21 +22,17 @@ class S3ApiRulesService:
             lifecycle_rules_exist = True
         except Exception as e:
             if "NoSuchLifecycleConfiguration" in str(e):
-                logging.info(f'## Note: There is no lifecycle policy on s3://{bucket}.')
+                logging.info(f'## Note: There is no lifecycle policy on s3://{self.bucket}.')
             else: 
                 logging.info(f"Exiting because of this exception: {str(e)}.")
 
         rules = []
         if lifecycle_rules_exist:
             rules: list = client.get_bucket_lifecycle(Bucket=self.bucket).get('Rules')
-            logging.info(f"## Found these existing rules: {rules}")
+            logging.info(f"## Found existing rules: {rules}")
         return rules
     
-    # def __merge__(self, new_rule: list) -> dict: 
-    #     all__rules = new_rule + 
-    #     return_val =  {'Rules':  all__rules}
-    #     logging.info(return_val)
-        
+
     #     return return_val
         # {'Rules': [{'Expiration': {'Days': 30},
         #             'ID': 'deleteCloudTrailAfter30DaysWTrailingSlash',
@@ -52,17 +48,9 @@ class S3ApiRulesService:
     def upload(self, new_rule: list):
         s3 = boto3.resource('s3')
         blc = s3.BucketLifecycleConfiguration(self.bucket)
-        
-        logging.info("*** Deploying these rules ***")
-        logging.info(f"New rule ** {new_rule} ** ")
-        logging.info(f"Inbound rule ** {conf.inbound_rule} **")
+        all_rules = {'Rules' : self.existing_rules + new_rule} if self.existing_rules else {'Rules' : new_rule}
+        logging.info(f"## Attempting to upload:  {all_rules}")
 
-
-        all_rules = {'Rules' : self.existing_rules + new_rule}
-
-        logging.info(all_rules)
-
-        # send it, or fail and tell why.
         try:
             blc.put(LifecycleConfiguration = all_rules)
             logging.info("Deployed")
@@ -76,9 +64,4 @@ class S3ApiRulesService:
             #  2. Rules were not uploaded. Exception is: An error occurred (InvalidArgument) when calling 
             #     the PutBucketLifecycleConfiguration operation: Rule ID must be unique. Found 
             #     same ID for more than one rule
-
-        
-
-
-
-
+            
