@@ -6,6 +6,10 @@ class LifecyclePolicyBuilder:
     def __init__(self): 
         pass
 
-    def merge(existingRules: list, new_rules: list )
+    def merge(existingRules: list, new_rules: list ) :
+
+
         pass
     
+    def add_trailing_slash(self): 
+        pass

@@ -18,5 +18,7 @@ source .venv/bin/activate # activate your virual env
 ``` 
 cd ./src/
 python -m tonythor.examples.deploy_rule # go edit it to your liking first. 
+python -m main
+
 
 ```

@@ -15,6 +15,7 @@ class S3ApiRulesService:
         self.existing_rules = self.__download__()
     
     def __download__(self) -> list:
+        lifecycle_rules_exist = False
         client = boto3.client('s3')
         try:
             client.get_bucket_lifecycle(Bucket=self.bucket).get("Rules")
@@ -31,9 +32,51 @@ class S3ApiRulesService:
             logging.info(f"## Found these existing rules: {rules}")
         return rules
     
-    
-    def upload(self, rule: dict):
-        pass
+    # def __merge__(self, new_rule: list) -> dict: 
+    #     all__rules = new_rule + 
+    #     return_val =  {'Rules':  all__rules}
+    #     logging.info(return_val)
+        
+    #     return return_val
+        # {'Rules': [{'Expiration': {'Days': 30},
+        #             'ID': 'deleteCloudTrailAfter30DaysWTrailingSlash',
+        #             'Prefix': 'cloud-trail/AWSLogs/764573855117/CloudTrail/us-east-1/',
+        #             'Status': 'Enabled'},
+        #            {'Expiration': {'Days': 200},
+        #             'ID': 'deleteCloudTrailAfter30DaysWTrailingSlash200',
+        #             'Prefix': 'cloud-trail/AWSLogs/764573855117/CloudTrail/us-east-1/',
+        #             'Status': 'Enabled'}]}
+
+
+
+    def upload(self, new_rule: list):
+        s3 = boto3.resource('s3')
+        blc = s3.BucketLifecycleConfiguration(self.bucket)
+        
+        logging.info("*** Deploying these rules ***")
+        logging.info(f"New rule ** {new_rule} ** ")
+        logging.info(f"Inbound rule ** {conf.inbound_rule} **")
+
+
+        all_rules = {'Rules' : self.existing_rules + new_rule}
+
+        logging.info(all_rules)
+
+        # send it, or fail and tell why.
+        try:
+            blc.put(LifecycleConfiguration = all_rules)
+            logging.info("Deployed")
+
+        except Exception as e:
+            logging.error(f'## Rules were not uploaded. Exception is: {str(e)}')
+            ## Possible errors are:
+            #  1. Rules were not uploaded. Exception is: An error occurred (InvalidRequest) when calling the 
+            #     PutBucketLifecycleConfiguration operation: Found two rules with same 
+            #     prefix '/cloud-trail/AWSLogs/764573855117/CloudTrail/'
+            #  2. Rules were not uploaded. Exception is: An error occurred (InvalidArgument) when calling 
+            #     the PutBucketLifecycleConfiguration operation: Rule ID must be unique. Found 
+            #     same ID for more than one rule
+
         
 
 
