@@ -13,10 +13,10 @@ I use it for managing my personal aws account.
     .venv/bin/python -m pip install -r ./requirements.txt
     ```
 
-### usage
+### Usage / Upload an s3 retention rule 
 ``` 
 source .venv/bin/activate
 cd ./src/
 # python -m tonythor.examples.deploy_rule  -> if you want to use as a script. 
-python -m main -e 45 -i delete-cloud-trail-over-45 -k cloud-trail/AWSLogs/ -b tonyfraser-aws-logging
+python -m main -e 45 -i delete-cloud-trail-over-45 -k cloud-trail/AWSLogs/ -b {bucketname}
 ```
