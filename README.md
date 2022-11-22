@@ -15,7 +15,7 @@ source .venv/bin/activate # activate your virual env
 
 ### Usage / Upload an s3 retention rule 
 Notes: 
-1. python -m tonythor.examples.deploy_rule is the example
+1. `python -m tonythor.examples.deploy_rule` is the original POC
 1. If your key is a directory, don't forget to include the trailing slash.
 ``` 
 source .venv/bin/activate
