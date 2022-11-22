@@ -24,7 +24,7 @@ class S3ApiRulesService:
             if "NoSuchLifecycleConfiguration" in str(e):
                 logging.info(f'## Note: There is no lifecycle policy on s3://{self.bucket}.')
             else: 
-                logging.info(f"Exiting because of this exception: {str(e)}.")
+                logging.info(f"## Exiting because of this exception: {str(e)}.")
 
         rules = []
         if lifecycle_rules_exist:
@@ -32,18 +32,6 @@ class S3ApiRulesService:
             logging.info(f"## Found existing rules: {rules}")
         return rules
     
-
-    #     return return_val
-        # {'Rules': [{'Expiration': {'Days': 30},
-        #             'ID': 'deleteCloudTrailAfter30DaysWTrailingSlash',
-        #             'Prefix': 'cloud-trail/AWSLogs/764573855117/CloudTrail/us-east-1/',
-        #             'Status': 'Enabled'},
-        #            {'Expiration': {'Days': 200},
-        #             'ID': 'deleteCloudTrailAfter30DaysWTrailingSlash200',
-        #             'Prefix': 'cloud-trail/AWSLogs/764573855117/CloudTrail/us-east-1/',
-        #             'Status': 'Enabled'}]}
-
-
 
     def upload(self, new_rule: list):
         s3 = boto3.resource('s3')
@@ -53,7 +41,7 @@ class S3ApiRulesService:
 
         try:
             blc.put(LifecycleConfiguration = all_rules)
-            logging.info("Deployed")
+            logging.info("## Deployed")
 
         except Exception as e:
             logging.error(f'## Rules were not uploaded. Exception is: {str(e)}')
