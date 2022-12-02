@@ -25,28 +25,27 @@ class S3ApiRulesService:
             lifecycle_rules_exist = True
         except Exception as e:
             if "NoSuchLifecycleConfiguration" in str(e):
-                logging.info(f'## Note: There is no lifecycle policy on s3://{self.bucket}.')
+                logging.info(f'**! There is no lifecycle policy on s3://{self.bucket}.')
             else: 
-                logging.info(f"## Exiting because of this exception: {str(e)}.")
+                logging.info(f"**! Exiting because of this exception: {str(e)}.")
 
         rules = []
         if lifecycle_rules_exist:
             rules: list = client.get_bucket_lifecycle(Bucket=self.bucket).get('Rules')
-            # logging.info(f"## Found existing rules: {rules}")
         return rules
     
 
     def upload(self, new_rule: list):
         blc = self.s3.BucketLifecycleConfiguration(self.bucket)
         all_rules = {'Rules' : self.existing_rules + new_rule} if self.existing_rules else {'Rules' : new_rule}
-        logging.info(f"## Attempting to upload:  {all_rules}")
+        logging.info(f"** Attempting to upload:  {all_rules}")
 
         try:
             blc.put(LifecycleConfiguration = all_rules)
-            logging.info("## Deployed")
+            logging.info("** Deployed")
 
         except Exception as e:
-            logging.error(f'## Rules were not uploaded. Exception is: {str(e)}')
+            logging.error(f'** Rules were not uploaded. Exception is: {str(e)}')
             ## Possible errors are:
             #  1. Rules were not uploaded. Exception is: An error occurred (InvalidRequest) when calling the 
             #     PutBucketLifecycleConfiguration operation: Found two rules with same 
@@ -63,24 +62,28 @@ class S3ApiRulesService:
         delete_position = None
 
         while i < length:
-            # print(self.existing_rules[i].get("ID"))
             if self.existing_rules[i].get("ID") == rule_id:
                 delete_position = i 
             i += 1
+         
+        
+        # if delete position is not null, it means that there's something in existing rules
+        # where the title matched, and it needs to be deleted.
+        if delete_position != None:
+            if length == 1:
+                # This means there only one rule, so you have to deregister the lifecycle policy itself.
+                # You can't upload an "empty" set of rules.
+                logging.info('** deregistering bucket lifecycle policy')   
+                self.s3.BucketLifecycle(self.bucket).delete()
 
-        if delete_position:
-            del self.existing_rules[delete_position]
-            logging.info("rules AFTER the deletion")
-            logging.info(self.existing_rules)
-            blc = self.s3.BucketLifecycleConfiguration(self.bucket)
-            rules = {'Rules' : self.existing_rules}
-            blc.put(LifecycleConfiguration = rules)
-        if delete_position==0: 
-            ## there is only one rule, so delete the lifecycle policy itself
-            ## there can be no policy without a rule within it.
-            self.s3.BucketLifecycle(self.bucket).delete()
+            if length > 1:
+                # Means there is more than one record, so delete just that one matching one from the existing rules
+                # and shoot whatever's left back up as a new policy object. 
+                del self.existing_rules[delete_position]
+                logging.info(f"** Rules AFTER the deletion {self.existing_rules}")
+                blc = self.s3.BucketLifecycleConfiguration(self.bucket)
+                rules = {'Rules' : self.existing_rules}
+                blc.put(LifecycleConfiguration = rules)
         else:
-            logging.info("nothing to delete")   
+            logging.info("** Nothing to delete, perhaps you types in the wrong rule id?")   
 
-
-            

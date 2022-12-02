@@ -18,7 +18,9 @@ match operation :
                 else:
                     logging.info(f'*** RuleID: {rule.get("ID")}')
         else:
-            logging.info("'*** No rules for this bucket")        
+            # *** There are no rules for this bucket, but this is logged within the service. 
+            pass
+             
                     
     case "deploy-rule": 
         # python -m s3RulesUtility deploy-rule -e 45 -k cloud-trail/AWSLogs/  -b tonyfraser-aws-logging -i delete-cloud-trail-over-45
