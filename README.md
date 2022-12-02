@@ -28,6 +28,6 @@ python -m s3RulesUtility list-rules --bucket {bucket} --raw
 python -m s3RulesUtility deploy-rule -e 45 -k cloud-trail/AWSLogs/  -b {bucket} -i delete-cloud-trail-over-45
 python -m s3RulesUtility deploy-rule -e 23 -k mykey/is/a/good/key23 -b {bucket} -i 23-days-is-a-good-key
 
-python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id delete-cloud-trail-over-45
-python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id 23-days-is-a-good-key
+python -m s3RulesUtility delete-rule --bucket {bucket} --rule_id delete-cloud-trail-over-45
+python -m s3RulesUtility delete-rule --bucket {bucket} --rule_id 23-days-is-a-good-key
 ```
