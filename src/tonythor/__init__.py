@@ -1,14 +1,18 @@
-from tonythor.env.env_config import EnvConfig
+import sys
+from tonythor.application_support.env_config import EnvConfig
+from tonythor.application_support.arg_parse import ArgParser as AP
 
-""" 
-### Module configuration
-Instantiate the environment, which also sets up centralized logging. 
-Import into files like so.
+valid_module_options = ['delete-rule', 'list-rules', 'deploy-rule']
 
-` from tonythor import conf ` 
-"""
+if len(sys.argv) > 1 and sys.argv[1] in valid_module_options:
+    args = AP().args
+    print(args)
+    operation:str = sys.argv[1]
+    conf:EnvConfig = EnvConfig()
 
-conf = EnvConfig()
+else : 
+    """ use argparse help to tell the user they need at lest one argument"""
+    AP()
 
 
 

@@ -19,8 +19,15 @@ Notes:
 1. If your key is a directory, include the trailing slash or your rule won't work
 ``` 
 source .venv/bin/activate
-cd ./src/
-python -m main -e 45 -i delete-cloud-trail-over-45 -k cloud-trail/AWSLogs/ -b {bucket}
-python -m main --expire_days 1000 --rule_id delete-cloud-trail-over-4asdfs5 --key_prefix cloud-trailafasf/AWSLogs/ --bucket {bucket}
 
+cd ./src/
+
+python -m s3RulesUtility list-rules --bucket {bucket}
+python -m s3RulesUtility list-rules --bucket {bucket} --raw
+
+python -m s3RulesUtility deploy-rule -e 45 -k cloud-trail/AWSLogs/  -b {bucket} -i delete-cloud-trail-over-45
+python -m s3RulesUtility deploy-rule -e 23 -k mykey/is/a/good/key23 -b {bucket} -i 23-days-is-a-good-key
+
+python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id delete-cloud-trail-over-45
+python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id 23-days-is-a-good-key
 ```
