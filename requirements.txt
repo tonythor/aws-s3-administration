@@ -2,6 +2,7 @@ boto3
 awscli
 botocore
 prettyprint
+dataclass
 
 # stuff for cdk
 aws-cdk-lib==2.27.0

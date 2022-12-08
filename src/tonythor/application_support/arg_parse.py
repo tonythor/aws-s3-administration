@@ -40,6 +40,12 @@ class ArgParser:
                                     dest="rule_id",
                                     help='the name of the rule as displayed in the console'
                                     )
+        parser_deploy_rule.add_argument('-d', '--disable_dry_run',
+                                    action='store_false',
+                                    required=False,
+                                    help='the default behavior is to run a dry run. disable if you actually want to deploy'
+                                    )   
+                  
 
         ## List the rules
         parser_list_rules = subparsers.add_parser('list-rules', help="shows retention and transformation rules for a given s3 bucket")

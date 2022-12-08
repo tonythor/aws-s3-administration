@@ -6,7 +6,7 @@ valid_module_options = ['delete-rule', 'list-rules', 'deploy-rule']
 
 if len(sys.argv) > 1 and sys.argv[1] in valid_module_options:
     args = AP().args
-    print(args)
+    # print(args)
     operation:str = sys.argv[1]
     conf:EnvConfig = EnvConfig()
 
