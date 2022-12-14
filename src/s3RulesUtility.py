@@ -13,8 +13,8 @@ logging.info(f"*** System fully initialized")
 
 match operation :
     case "list-rules":
-        # python -m s3RulesUtility list-rules --bucket tonyfraser-aws-logging
-        # python -m s3RulesUtility list-rules --bucket tonyfraser-aws-logging --raw
+        # python -m s3RulesUtility list-rules --bucket {bucket}
+        # python -m s3RulesUtility list-rules --bucket {bucket} --raw
         if service.existing_rules:
             for rule in service.existing_rules:
                 if args.raw:
@@ -43,12 +43,12 @@ match operation :
             service.upload(inbound_rule)
 
     case 'delete-rule': 
-        # python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id 23-days-is-a-good-key
-        # python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id delete-ctrail-over-45 
+        # python -m s3RulesUtility delete-rule --bucket {bucket} --rule_id 23-days-is-a-good-key
+        # python -m s3RulesUtility delete-rule --bucket {bucket} --rule_id delete-ctrail-over-45 
         service.delete_rule(args.rule_id)
     
     case 'upload-json':
-        # python -m s3RulesUtility upload-json --bucket tonyfraser-aws-logging -p ../sample_conf/rule.json
+        # python -m s3RulesUtility upload-json --bucket {bucket} -p ../sample_conf/rule.json
         import json
         with open(file=args.json_file_path, mode="r") as data_file:
             rule_from_json = json.load(data_file)
