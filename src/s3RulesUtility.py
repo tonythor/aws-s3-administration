@@ -48,35 +48,29 @@ match operation :
         service.delete_rule(args.rule_id)
     
     case 'upload-json':
-        ## This is expert mode. It assumes you've constructed a fully tested json and you know what you are doing.
-        ## It has one feature, it can either overwrite, or not.
-
+        # python -m s3RulesUtility upload-json --bucket tonyfraser-aws-logging -p ../sample_conf/rule.json
         import json
         with open(file=args.json_file_path, mode="r") as data_file:
             rule_from_json = json.load(data_file)
 
-        pprint.pprint(service.existing_rules)
-        # filtered_dict = {k:v for k,v in dict(service.existing_rules.iteritems()) if rule_from_json.get("ID") in k}
+        new_id = rule_from_json.get("ID")
 
-        # print(service.existing_rules)
-        # if rule_from_json.get("ID") in service.existing_rules:
-        #     print("rule exists")
-        # else:
-        #     print("DNE")   
-        
-        # if args.overwrite:
-        #     ## in expert mode, overwrite existing rule
-        #     logging.info(f"Overwriting {rule_from_json.get('ID')}")
-        #     service.delete_rule(rule_from_json.get("ID"))
-        #     service.upload([rule_from_json])
-        # else: 
-        #     logging.info("uploading, not in overwrite mode")
-        # # ## try uploading without overwriting first.
-        #     try:
-        #         service.upload([rule_from_json])
-        #         logging.info("** Deployed")
-        #     except Exception as e:
-        #         logging.error(f"Rule was not uploaded because of this exception: {str(e)}")
+        # todo - this should be a one liner    
+        existing_ids = []
+        if service.existing_rules: 
+            for rule in service.existing_rules:
+                existing_ids.append(rule.get("ID"))
+        already_exists = True if new_id in existing_ids else False
+ 
+        if already_exists:
+            if args.overwrite:
+                service.delete_rule(new_id)
+                service.upload([rule_from_json])
+            else: 
+                logging.error("There's a rule up there already.")
+        else: 
+            service.upload([rule_from_json])
+
 
         
 
