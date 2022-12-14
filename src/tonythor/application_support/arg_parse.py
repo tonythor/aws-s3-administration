@@ -5,7 +5,6 @@ class ArgParser:
     """ takes in all the arguments, passes them back as a dict, but also
     prepares the rule as a dictionary object in a format that the S3 api 
     can use directly."
-
     """
     args: dict
 
@@ -47,7 +46,7 @@ class ArgParser:
                                     )   
                   
 
-        ## List the rules
+        ## list bucket rules
         parser_list_rules = subparsers.add_parser('list-rules', help="shows retention and transformation rules for a given s3 bucket")
         parser_list_rules.add_argument('-b', '--bucket',
                                     required=True,
@@ -61,7 +60,7 @@ class ArgParser:
                                     help='shows raw output of the rules'
                                     )   
 
-        ## Delete a rule
+        ## delete a rule
         parser_delete_rule = subparsers.add_parser('delete-rule', help="use this to remove a retention or transition rule from an s3 bucket")
         parser_delete_rule.add_argument('-b', '--bucket',
                                     required=True,
@@ -73,6 +72,24 @@ class ArgParser:
                                     dest="rule_id",
                                     help='the name of the rule, as displayed in the console, to delete'
                                     )
+
+        ## expert mode -- upload any isolated json rule                            
+        parser_json_rule = subparsers.add_parser('upload-json', help="manage your rules with more complex transitions")
+        parser_json_rule.add_argument('-b', '--bucket',
+                                    required=True,
+                                    dest="bucket",
+                                    help='s3 bucket name, not s3:// or trailing slash'
+                                    )  
+        parser_json_rule.add_argument('-p', '--json_file_path',
+                                    required=True,
+                                    dest="json_file_path",
+                                    help='the file path of the json with the exact rule you want to upload'
+                                    )
+        parser_json_rule.add_argument('-o', '--overwrite',
+                                    action='store_true',
+                                    required=False,
+                                    help='overwrite the rule if it exists already'
+                                    )   
         return parser.parse_args()
 
 

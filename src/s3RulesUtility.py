@@ -46,3 +46,37 @@ match operation :
         # python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id 23-days-is-a-good-key
         # python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id delete-ctrail-over-45 
         service.delete_rule(args.rule_id)
+    
+    case 'upload-json':
+        ## This is expert mode. It assumes you've constructed a fully tested json and you know what you are doing.
+        ## It has one feature, it can either overwrite, or not.
+
+        import json
+        with open(file=args.json_file_path, mode="r") as data_file:
+            rule_from_json = json.load(data_file)
+
+        pprint.pprint(service.existing_rules)
+        # filtered_dict = {k:v for k,v in dict(service.existing_rules.iteritems()) if rule_from_json.get("ID") in k}
+
+        # print(service.existing_rules)
+        # if rule_from_json.get("ID") in service.existing_rules:
+        #     print("rule exists")
+        # else:
+        #     print("DNE")   
+        
+        # if args.overwrite:
+        #     ## in expert mode, overwrite existing rule
+        #     logging.info(f"Overwriting {rule_from_json.get('ID')}")
+        #     service.delete_rule(rule_from_json.get("ID"))
+        #     service.upload([rule_from_json])
+        # else: 
+        #     logging.info("uploading, not in overwrite mode")
+        # # ## try uploading without overwriting first.
+        #     try:
+        #         service.upload([rule_from_json])
+        #         logging.info("** Deployed")
+        #     except Exception as e:
+        #         logging.error(f"Rule was not uploaded because of this exception: {str(e)}")
+
+        
+
