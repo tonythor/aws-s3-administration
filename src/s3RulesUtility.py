@@ -46,3 +46,31 @@ match operation :
         # python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id 23-days-is-a-good-key
         # python -m s3RulesUtility delete-rule --bucket tonyfraser-aws-logging --rule_id delete-ctrail-over-45 
         service.delete_rule(args.rule_id)
+    
+    case 'upload-json':
+        # python -m s3RulesUtility upload-json --bucket tonyfraser-aws-logging -p ../sample_conf/rule.json
+        import json
+        with open(file=args.json_file_path, mode="r") as data_file:
+            rule_from_json = json.load(data_file)
+
+        new_id = rule_from_json.get("ID")
+
+        # todo - this should be a one liner    
+        existing_ids = []
+        if service.existing_rules: 
+            for rule in service.existing_rules:
+                existing_ids.append(rule.get("ID"))
+        already_exists = True if new_id in existing_ids else False
+ 
+        if already_exists:
+            if args.overwrite:
+                service.delete_rule(new_id)
+                service.upload([rule_from_json])
+            else: 
+                logging.error("There's a rule up there already.")
+        else: 
+            service.upload([rule_from_json])
+
+
+        
+

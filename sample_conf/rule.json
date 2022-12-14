@@ -1,0 +1,14 @@
+{
+  "ID": "my-transition-rule",
+  "Prefix": "/pay/more/taxes",
+  "Status": "Enabled",
+  "Transitions": [
+    {
+      "StorageClass": "ONEZONE_IA",
+      "Days": 150
+    }
+  ],
+  "Expiration": {
+    "Days": 365
+  }
+}
