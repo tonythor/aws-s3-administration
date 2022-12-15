@@ -89,7 +89,13 @@ class ArgParser:
                                     action='store_true',
                                     required=False,
                                     help='overwrite the rule if it exists already'
+                                    ) 
+        parser_json_rule.add_argument('-d', '--disable_dry_run',
+                                    action='store_false',
+                                    required=False,
+                                    help='the default behavior is to run a dry run. disable if you actually want to deploy'
                                     )   
+                    
         return parser.parse_args()
 
 

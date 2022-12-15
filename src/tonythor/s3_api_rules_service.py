@@ -68,8 +68,7 @@ class S3ApiRulesService:
             if self.existing_rules[i].get("ID") == rule_id:
                 delete_position = i 
             i += 1
-         
-        
+                 
         # if delete position is not null, it means that there's something in existing rules
         # where the title matched, and it needs to be deleted.
         if delete_position != None:
@@ -103,7 +102,7 @@ class S3ApiRulesService:
 
         try:
             for page in page_iterator:
-                        # {'Key': 'cloud-trail/AWSLogs/764573855117/CloudTrail-Digest/af-south-1/2022/10/22/764573855117_CloudTrail-Digest_af-south-1_tonyfraser-aws-logs_us-east-1_20221022T004127Z.json.gz', 
+                        # {'Key': 'cloud-trail/AWSLogs/{accountid}/CloudTrail-Digest/af-south-1/2022/10/22/{accountid}_CloudTrail-Digest_af-south-1_tonyfraser-aws-logs_us-east-1_20221022T004127Z.json.gz', 
                         # 'LastModified': datetime.datetime(2022, 10, 22, 1, 24, 16, tzinfo=tzutc()), 
                         # 'ETag': '"6a4408cf509626436b28821199b22ff7"', 
                         # 'Size': 727, 

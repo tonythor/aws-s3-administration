@@ -10,14 +10,16 @@ class Validator:
     impact_check:bool
     prefix_check:bool
     close:bool
+    prefix:str
 
-    def __init__(self, service, impact_check=True, prefix_check=True, close=True, subdirectory_count=4):
+    def __init__(self, service, prefix, impact_check=True, prefix_check=True, close=True, subdirectory_count=4):
         Logger.get_instance(self)
         self.impact_check = impact_check
         self.prefix_check = prefix_check
         self.close = close
         self.service = service
         self.subdirectory_count = subdirectory_count
+        self.prefix = prefix
 
     def validate(self):
         logging.info("* Running deploy rule validator")
@@ -27,18 +29,18 @@ class Validator:
 
     def show_impact(self):
         logging.info("** Impact Check:")
-        logging.info(f"** Dry run with against prefix: {args.key_prefix}")
-        all_keys = self.service.directories_under_prefix(args.key_prefix)
-        logging.info(f'***| > Prefix {args.key_prefix}')
+        logging.info(f"** Dry run with against prefix: {self.prefix}")
+        all_keys = self.service.directories_under_prefix(self.prefix)
+        logging.info(f'***|> Prefix {self.prefix}')
         for k in all_keys:    
-            logging.info(f"***|--> SubDir: {k.replace(args.key_prefix, './')}  FileCount:{all_keys.get(k)}")
+            logging.info(f"***|--> SubDir: {k.replace(self.prefix, './')}  FileCount:{all_keys.get(k)}")
         logging.info(f"*** Your rule will apply to {len(all_keys)} subdirectories and {sum(all_keys.values())} files")   
           
     def check_prefix_common_sense(self):
-        _prefix_count_ = args.key_prefix.count("/")
+        _prefix_count_ = self.prefix.count("/")
         logging.info("** Prefix Check:")
         if _prefix_count_ <= 1 :
-            logging.info("**** If deploy this rule, you are likely adding an aggressive rule, similar to rm -fr. ")
+            logging.info("**** You are likely adding an aggressive rule, similar to rm -fr. ")
             logging.info("**** Please look closely at your key_prefix, and remember that anything under that will be deleted or transitioned.")
         elif self.subdirectory_count > _prefix_count_: 
             logging.info(f"**** Your key only has {_prefix_count_} subdirectories.")

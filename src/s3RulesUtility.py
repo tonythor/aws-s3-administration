@@ -28,7 +28,7 @@ match operation :
                     
     case "deploy-rule": 
         if args.disable_dry_run:
-            v = Validator(service = service)
+            v = Validator(service = service, prefix=args.key_prefix)
             v.validate()
         else: 
             # python -m s3RulesUtility deploy-rule -e 45 -k cloud-trail/AWSLogs/   -i delete-ctrail-over-45 --dry_run_disabled -b {bucket}
@@ -55,21 +55,25 @@ match operation :
 
         new_id = rule_from_json.get("ID")
 
-        # todo - this should be a one liner    
-        existing_ids = []
-        if service.existing_rules: 
-            for rule in service.existing_rules:
-                existing_ids.append(rule.get("ID"))
-        already_exists = True if new_id in existing_ids else False
- 
-        if already_exists:
-            if args.overwrite:
-                service.delete_rule(new_id)
-                service.upload([rule_from_json])
-            else: 
-                logging.error("There's a rule up there already.")
+        if args.disable_dry_run:
+            v = Validator(service = service, prefix=rule_from_json.get("Prefix"))
+            v.validate()
         else: 
-            service.upload([rule_from_json])
+            # todo - this should be a one liner    
+            existing_ids = []
+            if service.existing_rules: 
+                for rule in service.existing_rules:
+                    existing_ids.append(rule.get("ID"))
+            already_exists = True if new_id in existing_ids else False
+    
+            if already_exists:
+                if args.overwrite:
+                    service.delete_rule(new_id)
+                    service.upload([rule_from_json])
+                else: 
+                    logging.error("There's a rule up there already.")
+            else: 
+                service.upload([rule_from_json])
 
 
         
